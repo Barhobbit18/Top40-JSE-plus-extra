@@ -2,6 +2,7 @@ import requests
 import lxml.html as lh
 import pandas as pd
 from bs4 import BeautifulSoup
+import unidecode
 
 url='https://www.sashares.co.za/jse-top-40/'
 
@@ -26,7 +27,7 @@ for j in range(1,len(tr)):
 
     for t in T.iterchildren():
         data=t.text_content()
-        
+
         frame[i][1].append(data)
         i+=1
 
@@ -58,5 +59,12 @@ for row in df['URL']:
 #print(FF)
 result = df.merge(FF,on='URL',how='left')
 result= result[result['JSE Code'] != 'JSE Code']
+
+result["Yesterday's Close"] = result["Yesterday's Close"].apply(unidecode.unidecode)
+result["Today's Open"] = result["Today's Open"].apply(unidecode.unidecode)
+result["Market Cap_x"] = result["Market Cap_x"].apply(unidecode.unidecode)
+result["Volume"] = result["Volume"].apply(unidecode.unidecode)
+result["P/E Ratio"] = result["P/E Ratio"].apply(unidecode.unidecode)
+result["EPS"] = result["EPS"].apply(unidecode.unidecode)
 #print(result)
-result.to_csv('result.csv', encoding="cp1252")
+#result.to_csv('result.csv', encoding="cp1252")
